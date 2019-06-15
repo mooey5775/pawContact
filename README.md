@@ -8,12 +8,16 @@ More scripts coming soon...
 Files
 -----
 
-`export_images.py`: Exports training data created by labeler
+`labelPawContacts.m`: GUI to label paw contact videos
+`makeTrainingSetCsv.m`: Creates CSV data created by labeler
+`export_images.py`: Exports training data from CSV
 
 Usage
 -----
 
-All files should be run with Python3. Run `python3 [FILE] -h` for usage information for each file
+MATLAB files were created in MATLAB R2018b.
+
+All Python files should be run with Python3. Run `python3 [FILE] -h` for usage information for each file.
 
 Most arguments are optional, although some data location choices are available
 
