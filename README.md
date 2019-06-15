@@ -8,9 +8,9 @@ More scripts coming soon...
 Files
 -----
 
-`labelPawContacts.m`: GUI to label paw contact videos
-`makeTrainingSetCsv.m`: Creates CSV data created by labeler
-`export_images.py`: Exports training data from CSV
+`labelPawContacts.m`: GUI to label paw contact videos  
+`makeTrainingSetCsv.m`: Creates CSV data created by labeler  
+`export_images.py`: Exports training data from CSV  
 
 Usage
 -----
