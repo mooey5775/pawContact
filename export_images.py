@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 from moviepy.editor import VideoFileClip
 from tqdm import tqdm
 
+import random
+
 def crop_frame(image, obsPos, size, cropSize):
     cropDia = int(cropSize/2)
     x = min(max(obsPos[0], 1), size[1]-2)
@@ -21,6 +23,8 @@ def crop_frame(image, obsPos, size, cropSize):
     return newImg
 
 if __name__ == '__main__':
+    random.seed(42)
+
     ap = argparse.ArgumentParser()
     ap.add_argument('-d', '--data-file', help="path to contact data")
     ap.add_argument('-s', '--session-dir', help="path to sessions")
@@ -28,7 +32,12 @@ if __name__ == '__main__':
                     help="path to output images (default: images)")
     ap.add_argument('-c', '--crop-size', type=int, default=168,
                     help="size of output image (default: 168), should be even")
+    ap.add_argument('-vs', '--validation-split', type=int, default=20,
+                    help="validation percentage for images")
+    ap.add_argument('-ts', '--testing-split', type=int, default=0,
+                    help="testing percentage for images")
     args = vars(ap.parse_args())
+    ALL_SPLITS = ['train', 'valid', 'test']
 
     with open(args['data_file']) as f:
         length = len(f.readlines()) - 1
@@ -62,13 +71,23 @@ if __name__ == '__main__':
                                                    skiprows=1)
 
         size = clips[session].size[:1][::-1]
+        loc_rand = random.random()
 
-        output_path = os.path.join(args['output_dir'], class_name)
-        if not os.path.exists(output_path):
-            os.makedirs(os.path.join(output_path))
+        for split in ALL_SPLITS:
+            if not os.path.exists(os.path.join(args['output_dir'], split, class_name)):
+                os.makedirs(os.path.join(args['output_dir'], split, class_name))
+
+        if loc_rand < args['testing_split'] / 100:
+            split = ALL_SPLITS[2]
+        elif loc_rand < (args['validation_split'] + args['testing_split']) / 100:
+            split = ALL_SPLITS[1]
+        else:
+            split = ALL_SPLITS[0]
+
+        output_path = os.path.join(args['output_dir'], split, class_name)
 
         features = tracked_features[session][frame_num]
-        image = clips[session].get_frame(framenum / clips[session].fps)
+        image = clips[session].get_frame(frame_num / clips[session].fps)
         obs_pos = [int(features[22]), int(features[23])]
         cropped_image = crop_frame(image, obs_pos, size,
                                    args['crop_size']).astype(np.uint8)

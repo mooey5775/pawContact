@@ -22,3 +22,11 @@ if __name__ == '__main__':
         print("Download this file: http://files.fast.ai/models/weights.tgz")
         print("And extract it in the 'fastai' directory")
         sys.exit()
+
+    ap = argparse.ArgumentParser()
+    ap.add_argument('-d', '--data-path', default='images',
+                    help="path to image data (default: images)")
+    ap.add_argument('-bs', '--batch-size', type=int, default=64,
+                    help="batch size when training")
+    args = vars(ap.parse_args())
+
